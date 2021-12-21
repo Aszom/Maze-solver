@@ -186,10 +186,18 @@ void followSegment(bool Kierunek = true)
   }
 }
 
-void driveToIntersectionCenter()
+void driveToIntersectionCenter(bool Kierunek = true)
 {
   motors.setSpeeds(straightSpeed2, straightSpeed2);
-  delay(intersectionDelay);
+    if(Kierunek != false)
+  { 
+    delay(intersectionDelay2);
+  }
+  else if(Kierunek == false)
+  {
+    delay(intersectionDelay1);
+  }
+  
 }
 
 void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * foundRight)
@@ -199,7 +207,7 @@ void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * fo
   *foundRight = 0;
 
   motors.setSpeeds(straightSpeed2, straightSpeed2);
-  for(uint16_t i = 0; i < intersectionDelay / 2; i++)
+  for(uint16_t i = 0; i < intersectionDelay2 / 2; i++)
   {
     readSensors();
     if(aboveLine(0))

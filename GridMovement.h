@@ -6,7 +6,8 @@
   
 const uint16_t straightSpeed2 = 200;
 const uint16_t straightSpeed1 = 400;
-const uint16_t intersectionDelay =90;
+const uint16_t intersectionDelay2 =80;
+const uint16_t intersectionDelay1 =50;
 const uint16_t turnSpeed = 200;
 const uint16_t calibrationSpeed = 150;
 const uint16_t sensorThreshold = 200;
@@ -23,7 +24,7 @@ bool aboveDarkSpot();
 extern uint16_t lineSensorValues[numSensors];
 void turn(char dir);
 void followSegment(bool Kierunek = true);
-void driveToIntersectionCenter();
+void driveToIntersectionCenter(bool Kierunek = true);
 void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * foundRight);
 void gridMovementSetup();
 
