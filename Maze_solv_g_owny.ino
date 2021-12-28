@@ -44,7 +44,6 @@ void loop()
   buttonA.waitForButton();
   mazeFollowPath(false);
   
-  
   buttonA.waitForButton();
   mazeFollowPath(true);
   
@@ -111,10 +110,6 @@ char revertPath(char turnDecision)
     return 'R';
   case 'R':
     return 'L';
-  case 'B':
-    return 'S';
-  case 'S':
-    return 'B';
   default:
     return 'S';
   }
@@ -126,7 +121,7 @@ void mazeFollowPath(bool Kierunek)
 {
   lcd.clear();
   char revertedPath [100] = "";
-  for(uint16_t i = pathLength; i == 0 ; i--)
+  for(uint16_t i = 0; i < pathLength; i++)
   {
     revertedPath[i] = revertPath(path[i]);
   }
