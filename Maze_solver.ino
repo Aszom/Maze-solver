@@ -126,7 +126,7 @@ void mazeFollowPath(bool Kierunek)
 {
   lcd.clear();
   char revertedPath [100] = "";
-  for(uint16_t i = 0; i < pathLength; i++)
+  for(uint16_t i = pathLength; i == 0 ; i--)
   {
     revertedPath[i] = revertPath(path[i]);
   }
