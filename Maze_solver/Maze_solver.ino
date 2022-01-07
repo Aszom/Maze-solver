@@ -114,10 +114,6 @@ char revertPath(char turnDecision)
     return 'R';
   case 'R':
     return 'L';
-  case 'B':
-    return 'S';
-  case 'S':
-    return 'B';
   default:
     return 'S';
   }
@@ -145,7 +141,7 @@ void mazeFollowPath(bool Kierunek)
   robotMovment.turn('B');
   robotMovment.turn('S');
  
-  for(uint16_t i = 0; i < pathLength; i++)
+  for(uint16_t i = pathLength; i == 0; i--)
   {
     robotMovment.followSegment(false);
     robotMovment.driveToIntersectionCenter();
@@ -160,8 +156,6 @@ void mazeFollowPath(bool Kierunek)
   robotMovment.followSegment();
   motors.setSpeeds(0, 0);
   buzzer.playFromProgramSpace(PSTR("!>>a32"));
-  //lcd.clear();
-  //lcd.print(obrot);
 }
 
 void simplifyPath()
