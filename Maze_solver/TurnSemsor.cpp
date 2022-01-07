@@ -1,12 +1,8 @@
 #include <Wire.h>
 #include "TurnSensor.h"
 
-uint32_t turnAngle = 0;
-int16_t turnRate;
-int16_t gyroOffset;
-uint16_t gyroLastUpdate = 0;
 
-void turnSensorSetup()
+void TrunSensor::turnSensorSetup()
 {
   Wire.begin();
   imu.init();
@@ -43,13 +39,13 @@ void turnSensorSetup()
   
 }
 
-void turnSensorReset()
+void TrunSensor::turnSensorReset()
 {
   gyroLastUpdate = micros();
   turnAngle = 0;
 }
 
-void turnSensorUpdate()
+void TrunSensor::turnSensorUpdate()
 {
   imu.readGyro();
   turnRate = imu.g.z - gyroOffset;

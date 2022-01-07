@@ -13,6 +13,8 @@ Zumo32U4IMU imu;
 char path[100];
 uint8_t pathLength = 0;
 
+static GridMovment robotMovment;
+
 void displayPath()
 {
   path[pathLength] = 0;
@@ -34,8 +36,9 @@ void displayPath()
 
 void setup()
 {
+  
   buzzer.playFromProgramSpace(PSTR("!>g32>>c32"));
-  gridMovementSetup();
+  robotMovment.gridMovementSetup();
   mazeSolve();
 }
 
@@ -66,11 +69,11 @@ void mazeSolve()
 
   while(LOOP_END)
   {
-    followSegment();
+    robotMovment.followSegment();
     bool foundLeft, foundStraight, foundRight;
-    driveToIntersectionCenter(&foundLeft, &foundStraight, &foundRight);
+    robotMovment.driveToIntersectionCenter(&foundLeft, &foundStraight, &foundRight);
 
-    if(aboveDarkSpot())
+    if(robotMovment.aboveDarkSpot())
     {
       break;
     }
@@ -94,7 +97,7 @@ void mazeSolve()
     {
       buzzer.playFromProgramSpace(PSTR("!<b4"));
     }
-    turn(dir);
+    robotMovment.turn(dir);
 
   }
 
@@ -139,22 +142,22 @@ void mazeFollowPath(bool Kierunek)
   buzzer.playFromProgramSpace(PSTR("!>c32"));
   delay(1000);
   
-  turn('B');
-  turn('S');
+  robotMovment.turn('B');
+  robotMovment.turn('S');
  
   for(uint16_t i = 0; i < pathLength; i++)
   {
-    followSegment(false);
-    driveToIntersectionCenter();
+    robotMovment.followSegment(false);
+    robotMovment.driveToIntersectionCenter();
     if(Kierunek){
-      turn(path[i]);
+      robotMovment.turn(path[i]);
     }
     else{
-      turn(revertedPath[i]);
+      robotMovment.turn(revertedPath[i]);
     }
   }
 
-  followSegment();
+  robotMovment.followSegment();
   motors.setSpeeds(0, 0);
   buzzer.playFromProgramSpace(PSTR("!>>a32"));
   //lcd.clear();

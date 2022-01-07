@@ -1,8 +1,6 @@
-#include "TurnSensor.h"
 #include "GridMovement.h"
 
-
-uint16_t lineSensorValues[numSensors];
+uint16_t lineSensorValues[NUM_OF_SENSORS];
 
 static void loadCustomCharacters()
 {
@@ -18,60 +16,33 @@ static void loadCustomCharacters()
   lcd.loadCustomCharacter(levels + 6, 6);  // 7 bars
 }
 
-void printBar(uint8_t height)
-{
-  if (height > 8) { height = 8; }
-  const char barChars[] = {' ', 0, 1, 2, 3, 4, 5, 6, 255};
-  lcd.print(barChars[height]);
-}
-
-uint16_t readSensors()
-{
-  return lineSensors.readLine(lineSensorValues);
-}
-
-bool aboveLine(uint8_t sensorIndex)
-{
-  return lineSensorValues[sensorIndex] > sensorThreshold;
-}
-
-bool aboveLineDark(uint8_t sensorIndex)
-{
-  return lineSensorValues[sensorIndex] > sensorThresholdDark;
-}
-
-bool aboveDarkSpot()
-{
-  return aboveLineDark(1) && aboveLineDark(2) && aboveLineDark(3);
-}
-
-static void lineSensorSetup()
+void GridMovment::lineSensorSetup()
 {
   lcd.clear();
   lcd.print(F("Line cal"));
   delay(1000);
   
-  turnSensorReset();
+  Sensor.turnSensorReset();
 
-  motors.setSpeeds(-calibrationSpeed, calibrationSpeed);
-  while((int32_t)turnAngle < turnAngle45 * 2)
+  motors.setSpeeds(-CALIBRATION_SPEED, CALIBRATION_SPEED);
+  while((int32_t)Sensor.turnAngle < turnAngle45 * 2)
   {
     lineSensors.calibrate();
-    turnSensorUpdate();
+    Sensor.turnSensorUpdate();
   }
 
-  motors.setSpeeds(calibrationSpeed, -calibrationSpeed);
-  while((int32_t)turnAngle > -turnAngle45 * 2)
+  motors.setSpeeds(CALIBRATION_SPEED, -CALIBRATION_SPEED);
+  while((int32_t)Sensor.turnAngle > -turnAngle45 * 2)
   {
     lineSensors.calibrate();
-    turnSensorUpdate();
+    Sensor.turnSensorUpdate();
   }
 
-  motors.setSpeeds(-calibrationSpeed, calibrationSpeed);
-  while((int32_t)turnAngle < 0)
+  motors.setSpeeds(-CALIBRATION_SPEED, CALIBRATION_SPEED);
+  while((int32_t)Sensor.turnAngle < 0)
   {
     lineSensors.calibrate();
-    turnSensorUpdate();
+    Sensor.turnSensorUpdate();
   }
 
   motors.setSpeeds(0, 0);
@@ -82,7 +53,7 @@ static void lineSensorSetup()
     readSensors();
 
     lcd.gotoXY(0, 0);
-    for (uint8_t i = 0; i < numSensors; i++)
+    for (uint8_t i = 0; i < NUM_OF_SENSORS; i++)
     {
       uint8_t barHeight = map(lineSensorValues[i], 0, 1000, 0, 8);
       printBar(barHeight);
@@ -93,42 +64,71 @@ static void lineSensorSetup()
   
 }
 
-void turn(char dir)
+
+void GridMovment::printBar(uint8_t height)
+{
+  if (height > 8) { height = 8; }
+  const char barChars[] = {' ', 0, 1, 2, 3, 4, 5, 6, 255};
+  lcd.print(barChars[height]);
+}
+
+uint16_t GridMovment::readSensors()
+{
+  return lineSensors.readLine(lineSensorValues);
+}
+
+bool GridMovment::aboveLine(uint8_t sensorIndex)
+{
+  return lineSensorValues[sensorIndex] > SENSOR_THRESHOLD;
+}
+
+bool GridMovment::aboveLineDark(uint8_t sensorIndex)
+{
+  return lineSensorValues[sensorIndex] > SENSOR_THRESHOLD_DARK;
+}
+
+bool GridMovment::aboveDarkSpot()
+{
+  return aboveLineDark(1) && aboveLineDark(2) && aboveLineDark(3);
+}
+
+
+void GridMovment::turn(char dir)
 {
   if (dir == 'S')
   {
     return;
   }
 
-  turnSensorReset();
+  Sensor.turnSensorReset();
 
   uint8_t sensorIndex;
 
   switch(dir)
   {
   case 'B':
-    motors.setSpeeds(-turnSpeed, turnSpeed);
-    while((int32_t)turnAngle < turnAngle45 * 3)
+    motors.setSpeeds(-stats.turnSpeed, stats.turnSpeed);
+    while((int32_t)Sensor.turnAngle < turnAngle45 * 3)
     {
-      turnSensorUpdate();
+      Sensor.turnSensorUpdate();
     }
     sensorIndex = 1;
     break;
 
   case 'L':
-    motors.setSpeeds(-turnSpeed, turnSpeed);
-    while((int32_t)turnAngle < turnAngle45)
+    motors.setSpeeds(-stats.turnSpeed, stats.turnSpeed);
+    while((int32_t)Sensor.turnAngle < turnAngle45)
     {
-      turnSensorUpdate();
+      Sensor.turnSensorUpdate();
     }
     sensorIndex = 1;
     break;
 
   case 'R':
-    motors.setSpeeds(turnSpeed, -turnSpeed);
-    while((int32_t)turnAngle > -turnAngle45)
+    motors.setSpeeds(stats.turnSpeed, -stats.turnSpeed);
+    while((int32_t)Sensor.turnAngle > -turnAngle45)
     {
-      turnSensorUpdate();
+      Sensor.turnSensorUpdate();
     }
     sensorIndex = 3;
     break;
@@ -147,7 +147,7 @@ void turn(char dir)
   }
 }
 
-void followSegment(bool Kierunek = true)
+void GridMovment::followSegment(bool Kierunek = true)
 {
   while(1)
   {
@@ -157,21 +157,11 @@ void followSegment(bool Kierunek = true)
     int16_t leftSpeed = 0;
     int16_t rightSpeed = 0;
 
-    if(Kierunek != false){
-      leftSpeed = (int16_t)straightSpeed2 + speedDifference;
-      rightSpeed = (int16_t)straightSpeed2 - speedDifference;
-  
-      leftSpeed = constrain(leftSpeed, 0, (int16_t)straightSpeed2);
-      rightSpeed = constrain(rightSpeed, 0, (int16_t)straightSpeed2);
-    }
-
-    else if(Kierunek == false){
-      leftSpeed = (int16_t)straightSpeed1 + speedDifference;
-      rightSpeed = (int16_t)straightSpeed1 - speedDifference;
-  
-      leftSpeed = constrain(leftSpeed, 0, (int16_t)straightSpeed1);
-      rightSpeed = constrain(rightSpeed, 0, (int16_t)straightSpeed1);
-    }
+    leftSpeed = (int16_t)stats.straightSpeed + speedDifference;
+    rightSpeed = (int16_t)stats.straightSpeed - speedDifference;
+    leftSpeed = constrain(leftSpeed, 0, (int16_t)stats.straightSpeed);
+    rightSpeed = constrain(rightSpeed, 0, (int16_t)stats.straightSpeed);
+    
     motors.setSpeeds(leftSpeed, rightSpeed);
 
     if(!aboveLine(0) && !aboveLine(1) && !aboveLine(2) && !aboveLine(3) && !aboveLine(4))
@@ -186,28 +176,28 @@ void followSegment(bool Kierunek = true)
   }
 }
 
-void driveToIntersectionCenter(bool Kierunek = true)
+void GridMovment::driveToIntersectionCenter(bool Kierunek = true)
 {
-  motors.setSpeeds(straightSpeed2, straightSpeed2);
-    if(Kierunek != false)
+  motors.setSpeeds(stats.straightSpeed, stats.straightSpeed);
+  if(Kierunek != false)
   { 
-    delay(intersectionDelay2);
+    delay(stats.intersectionDelay);
   }
   else if(Kierunek == false)
   {
-    delay(intersectionDelay1);
+    delay(stats.intersectionDelay);
   }
   
 }
 
-void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * foundRight)
+void GridMovment::driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * foundRight)
 {
   *foundLeft = 0;
   *foundStraight = 0;
   *foundRight = 0;
 
-  motors.setSpeeds(straightSpeed2, straightSpeed2);
-  for(uint16_t i = 0; i < intersectionDelay2 / 2; i++)
+  motors.setSpeeds(stats.straightSpeed, stats.straightSpeed);
+  for(uint16_t i = 0; i < stats.intersectionDelay / 2; i++)
   {
     readSensors();
     if(aboveLine(0))
@@ -229,10 +219,10 @@ void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * fo
   
 }
 
-void gridMovementSetup()
+void GridMovment::gridMovementSetup()
 {
   lineSensors.initFiveSensors();
   loadCustomCharacters();
-  turnSensorSetup();
+  Sensor.turnSensorSetup();
   lineSensorSetup();
 }
