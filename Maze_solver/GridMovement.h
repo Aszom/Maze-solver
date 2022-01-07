@@ -11,9 +11,6 @@
 
 extern uint16_t lineSensorValues[NUM_OF_SENSORS];
 
-
-
-
 extern Zumo32U4IMU imu;
 extern Zumo32U4ButtonA buttonA;
 extern Zumo32U4Motors motors;
