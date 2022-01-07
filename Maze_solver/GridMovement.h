@@ -20,7 +20,7 @@ extern Zumo32U4LineSensors lineSensors;
 
 struct settings{
   uint16_t straightSpeed = 200;
-  uint16_t intersectionDelay = 50;
+  uint16_t intersectionDelay = 80;
   uint16_t turnSpeed = 200;
 };
 

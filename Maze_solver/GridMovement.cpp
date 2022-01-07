@@ -232,12 +232,12 @@ void GridMovment::updateSettings()
   if(stats.straightSpeed >= 400)
   {
     stats.straightSpeed = 200;
-    stats.intersectionDelay = 50;
+    stats.intersectionDelay = 80;
   }
   else
   {
-    stats.straightSpeed += 100;
-    stats.intersectionDelay += 15;
+    stats.straightSpeed += 20;
+    stats.intersectionDelay -= 3;
   }
   
 }
