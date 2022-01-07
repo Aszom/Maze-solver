@@ -1,6 +1,9 @@
 #pragma once
 #include <Zumo32U4.h>
 
+#define LOOP_END 1
+#define ONE_SECOND 1000
+
 extern Zumo32U4ButtonA buttonA;
 extern Zumo32U4LCD lcd;
 extern Zumo32U4IMU imu;

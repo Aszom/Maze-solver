@@ -1,7 +1,6 @@
 #include <Wire.h>
 #include <Zumo32U4.h>
 #include "GridMovement.h"
-#define LOOP_END 1
 
 Zumo32U4LCD lcd;
 Zumo32U4Buzzer buzzer;
@@ -41,7 +40,8 @@ void setup()
   robotMovment.gridMovementSetup();
   mazeSolve();
 }
-
+#define KIERUNEK_META true
+#define KIERUNEK_START false
 void loop()
 {
   while(LOOP_END)
@@ -56,11 +56,12 @@ void loop()
       break;
     } 
   }
-  
-  mazeFollowPath(false);
+  delay(ONE_SECOND);
+  mazeFollowPath(KIERUNEK_START);
   
   buttonA.waitForButton();
-  mazeFollowPath(true);
+  delay(ONE_SECOND);
+  mazeFollowPath(KIERUNEK_META);
   
 }
 
@@ -74,10 +75,8 @@ char selectTurn(bool foundLeft, bool foundStraight, bool foundRight)
 
 void mazeSolve()
 {
-  
-  pathLength = 0;
   buzzer.playFromProgramSpace(PSTR("!L16 cdegreg4"));
-  delay(1000);
+  delay(ONE_SECOND);
 
   while(LOOP_END)
   {
@@ -137,18 +136,21 @@ void mazeFollowPath(bool Kierunek)
 {
   lcd.clear();
   char revertedPath [100] = "";
-  for(uint16_t i = 0; i < pathLength; i++)
+  if (!Kierunek)
   {
-    revertedPath[pathLength-i-1] = revertPath(path[i]);
-  }
-  if(Kierunek){
-    lcd.print(path);
-  }
-  else{
+    for(uint16_t i = 0; i < pathLength; i++)
+    {
+      revertedPath[pathLength-i-1] = revertPath(path[i]);
+    }
     lcd.print(revertedPath);
   }
+  else 
+  {
+    lcd.print(path);
+  }
+
   buzzer.playFromProgramSpace(PSTR("!>c32"));
-  delay(1000);
+  delay(ONE_SECOND);
   
   robotMovment.turn('B');
   robotMovment.turn('S');
@@ -157,12 +159,9 @@ void mazeFollowPath(bool Kierunek)
   {
     robotMovment.followSegment(false);
     robotMovment.driveToIntersectionCenter();
-    if(Kierunek){
-      robotMovment.turn(path[i]);
-    }
-    else{
-      robotMovment.turn(revertedPath[i]);
-    }
+    
+    if(Kierunek)  robotMovment.turn(path[i]);
+    else  robotMovment.turn(revertedPath[i]);
   }
 
   robotMovment.followSegment();

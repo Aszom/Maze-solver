@@ -4,8 +4,6 @@
 #include <Zumo32U4.h>
 #include "TurnSensor.h"
 
-#define LOOP_END 1
-
 #define NUM_OF_SENSORS 5
 #define SENSOR_THRESHOLD 200
 #define SENSOR_THRESHOLD_DARK 600

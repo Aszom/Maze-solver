@@ -13,7 +13,7 @@ void TurnSensor::turnSensorSetup()
 
   ledYellow(1);
 
-  delay(1000);
+  delay(ONE_SECOND);
 
   int32_t total = 0;
   for (uint16_t i = 0; i < 1024; i++)

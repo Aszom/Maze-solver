@@ -20,7 +20,7 @@ void GridMovment::lineSensorSetup()
 {
   lcd.clear();
   lcd.print(F("Line call"));
-  delay(1000);
+  delay(ONE_SECOND);
   
   Sensor.turnSensorReset();
 
