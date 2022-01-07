@@ -13,36 +13,37 @@ extern uint16_t lineSensorValues[NUM_OF_SENSORS];
 
 extern Zumo32U4IMU imu;
 extern Zumo32U4ButtonA buttonA;
+extern Zumo32U4ButtonB buttonB;
 extern Zumo32U4Motors motors;
 extern Zumo32U4LCD lcd;
 extern Zumo32U4LineSensors lineSensors;
 
 struct settings{
   uint16_t straightSpeed = 200;
-  uint16_t intersectionDelay =80;
+  uint16_t intersectionDelay = 50;
   uint16_t turnSpeed = 200;
-  uint16_t calibrationSpeed = 150;
-  int32_t gyroAngle45 = 0x20000000;
 };
 
 class GridMovment {
   private :
-  
-  public :
-  
+  TurnSensor Sensor;
   settings stats;
-  TrunSensor Sensor;
   void printBar(uint8_t barHeight);
   uint16_t readSensors();
+  void lineSensorSetup();
   bool aboveLine(uint8_t sensorIndex);
   bool aboveLineDark(uint8_t sensorIndex);
+   
+  public :
   bool aboveDarkSpot();
   void turn(char dir);
   void followSegment(bool Kierunek = true);
   void driveToIntersectionCenter(bool Kierunek = true);
   void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * foundRight);
   void gridMovementSetup();
-  void lineSensorSetup();
+  void updateSettings();
+  void printSettings();
+  
 
 
 };

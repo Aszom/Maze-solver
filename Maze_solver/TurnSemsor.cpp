@@ -1,8 +1,7 @@
 #include <Wire.h>
 #include "TurnSensor.h"
 
-
-void TrunSensor::turnSensorSetup()
+void TurnSensor::turnSensorSetup()
 {
   Wire.begin();
   imu.init();
@@ -39,13 +38,13 @@ void TrunSensor::turnSensorSetup()
   
 }
 
-void TrunSensor::turnSensorReset()
+void TurnSensor::turnSensorReset()
 {
   gyroLastUpdate = micros();
   turnAngle = 0;
 }
 
-void TrunSensor::turnSensorUpdate()
+void TurnSensor::turnSensorUpdate()
 {
   imu.readGyro();
   turnRate = imu.g.z - gyroOffset;
@@ -57,4 +56,9 @@ void TrunSensor::turnSensorUpdate()
   // (0.07 dps/digit) * (1/1000000 s/us) * (2^29/45 unit/degree)
   // = 14680064/17578125 unit/(digit*us)
   turnAngle += (int64_t)d * 14680064 / 17578125;
+}
+
+uint32_t TurnSensor::getTurnAngle()
+{
+  return turnAngle;
 }

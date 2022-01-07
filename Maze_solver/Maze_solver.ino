@@ -36,7 +36,7 @@ void displayPath()
 
 void setup()
 {
-  
+  robotMovment.printSettings();
   buzzer.playFromProgramSpace(PSTR("!>g32>>c32"));
   robotMovment.gridMovementSetup();
   mazeSolve();
@@ -44,9 +44,18 @@ void setup()
 
 void loop()
 {
-  buttonA.waitForButton();
+  while(1){
+    if( buttonA.isPressed())
+    {
+      break;
+    }
+    if( buttonB.isPressed())
+    {
+      robotMovment.updateSettings();
+      robotMovment.printSettings();
+    } 
+  }
   mazeFollowPath(false);
-  
   
   buttonA.waitForButton();
   mazeFollowPath(true);
@@ -63,6 +72,7 @@ char selectTurn(bool foundLeft, bool foundStraight, bool foundRight)
 
 void mazeSolve()
 {
+  
   pathLength = 0;
   buzzer.playFromProgramSpace(PSTR("!L16 cdegreg4"));
   delay(1000);

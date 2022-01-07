@@ -19,27 +19,27 @@ static void loadCustomCharacters()
 void GridMovment::lineSensorSetup()
 {
   lcd.clear();
-  lcd.print(F("Line cal"));
+  lcd.print(F("Line call"));
   delay(1000);
   
   Sensor.turnSensorReset();
 
   motors.setSpeeds(-CALIBRATION_SPEED, CALIBRATION_SPEED);
-  while((int32_t)Sensor.turnAngle < turnAngle45 * 2)
+  while((int32_t)Sensor.getTurnAngle() < TURN_ANGLE_45 * 2)
   {
     lineSensors.calibrate();
     Sensor.turnSensorUpdate();
   }
 
   motors.setSpeeds(CALIBRATION_SPEED, -CALIBRATION_SPEED);
-  while((int32_t)Sensor.turnAngle > -turnAngle45 * 2)
+  while((int32_t)Sensor.getTurnAngle() > -TURN_ANGLE_45 * 2)
   {
     lineSensors.calibrate();
     Sensor.turnSensorUpdate();
   }
 
   motors.setSpeeds(-CALIBRATION_SPEED, CALIBRATION_SPEED);
-  while((int32_t)Sensor.turnAngle < 0)
+  while((int32_t)Sensor.getTurnAngle() < 0)
   {
     lineSensors.calibrate();
     Sensor.turnSensorUpdate();
@@ -108,7 +108,7 @@ void GridMovment::turn(char dir)
   {
   case 'B':
     motors.setSpeeds(-stats.turnSpeed, stats.turnSpeed);
-    while((int32_t)Sensor.turnAngle < turnAngle45 * 3)
+    while((int32_t)Sensor.getTurnAngle() < TURN_ANGLE_45 * 3)
     {
       Sensor.turnSensorUpdate();
     }
@@ -117,7 +117,7 @@ void GridMovment::turn(char dir)
 
   case 'L':
     motors.setSpeeds(-stats.turnSpeed, stats.turnSpeed);
-    while((int32_t)Sensor.turnAngle < turnAngle45)
+    while((int32_t)Sensor.getTurnAngle() < TURN_ANGLE_45)
     {
       Sensor.turnSensorUpdate();
     }
@@ -126,7 +126,7 @@ void GridMovment::turn(char dir)
 
   case 'R':
     motors.setSpeeds(stats.turnSpeed, -stats.turnSpeed);
-    while((int32_t)Sensor.turnAngle > -turnAngle45)
+    while((int32_t)Sensor.getTurnAngle() > -TURN_ANGLE_45)
     {
       Sensor.turnSensorUpdate();
     }
@@ -225,4 +225,25 @@ void GridMovment::gridMovementSetup()
   loadCustomCharacters();
   Sensor.turnSensorSetup();
   lineSensorSetup();
+}
+
+void GridMovment::updateSettings()
+{
+  if(stats.straightSpeed == 400)
+  {
+    stats.straightSpeed = 200;
+    stats.intersectionDelay = 50;
+  }
+  else
+  {
+    stats.straightSpeed += 100;
+    stats.intersectionDelay += 15;
+  }
+  
+}
+void GridMovment::printSettings()
+{
+  lcd.print("Speed :");
+  lcd.gotoXY(0, 1);
+  lcd.print(stats.straightSpeed);
 }
