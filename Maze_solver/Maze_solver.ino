@@ -45,14 +45,14 @@ void setup()
 void loop()
 {
   while(1){
-    if( buttonA.isPressed())
-    {
-      break;
-    }
-    if( buttonB.isPressed())
+    if( buttonA.getSingleDebouncedPress())
     {
       robotMovment.updateSettings();
       robotMovment.printSettings();
+    }
+    if( buttonB.isPressed())
+    {
+      break;
     } 
   }
   mazeFollowPath(false);
