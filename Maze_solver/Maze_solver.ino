@@ -44,7 +44,8 @@ void setup()
 
 void loop()
 {
-  while(1){
+  while(LOOP_END)
+  {
     if( buttonA.getSingleDebouncedPress())
     {
       robotMovment.updateSettings();
@@ -55,6 +56,7 @@ void loop()
       break;
     } 
   }
+  
   mazeFollowPath(false);
   
   buttonA.waitForButton();

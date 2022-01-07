@@ -229,7 +229,7 @@ void GridMovment::gridMovementSetup()
 
 void GridMovment::updateSettings()
 {
-  if(stats.straightSpeed == 400)
+  if(stats.straightSpeed >= 400)
   {
     stats.straightSpeed = 200;
     stats.intersectionDelay = 50;
@@ -243,7 +243,9 @@ void GridMovment::updateSettings()
 }
 void GridMovment::printSettings()
 {
+  lcd.clear();
   lcd.print("Speed :");
   lcd.gotoXY(0, 1);
   lcd.print(stats.straightSpeed);
+  lcd.print("     ");
 }
