@@ -125,11 +125,9 @@ void mazeFollowPath(bool Kierunek)
 {
   lcd.clear();
   char revertedPath [100] = "";
-  int j = 0;
-  for(uint16_t i = pathLength-1; i == 0 ; i--)
+  for(uint16_t i = 0; i < pathLength; i++)
   {
-    revertedPath[j] = revertPath(path[i]);
-    j++;
+    revertedPath[pathLength-i-1] = revertPath(path[i]);
   }
   if(Kierunek){
     lcd.print(path);
@@ -143,7 +141,7 @@ void mazeFollowPath(bool Kierunek)
   robotMovment.turn('B');
   robotMovment.turn('S');
  
-  for(uint16_t i = 0; i == pathLength; i++)
+  for(uint16_t i = 0; i < pathLength; i++)
   {
     robotMovment.followSegment(false);
     robotMovment.driveToIntersectionCenter();
@@ -151,7 +149,7 @@ void mazeFollowPath(bool Kierunek)
       robotMovment.turn(path[i]);
     }
     else{
-      robotMovment.turn(revertedPath[pathLength-i-1]);
+      robotMovment.turn(revertedPath[i]);
     }
   }
 
