@@ -4,6 +4,8 @@
 #include <Zumo32U4.h>
 #include "TurnSensor.h"
 
+#define LOOP_END 1
+
 #define NUM_OF_SENSORS 5
 #define SENSOR_THRESHOLD 200
 #define SENSOR_THRESHOLD_DARK 600
@@ -20,7 +22,7 @@ extern Zumo32U4LineSensors lineSensors;
 
 struct settings{
   uint16_t straightSpeed = 200;
-  uint16_t intersectionDelay = 50;
+  uint16_t intersectionDelay = 80;
   uint16_t turnSpeed = 200;
 };
 

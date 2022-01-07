@@ -149,7 +149,7 @@ void GridMovment::turn(char dir)
 
 void GridMovment::followSegment(bool Kierunek = true)
 {
-  while(1)
+  while(LOOP_END)
   {
     uint16_t position = readSensors();
     int16_t error = (int16_t)position - 2000;
@@ -232,12 +232,12 @@ void GridMovment::updateSettings()
   if(stats.straightSpeed >= 400)
   {
     stats.straightSpeed = 200;
-    stats.intersectionDelay = 50;
+    stats.intersectionDelay = 80;
   }
   else
   {
-    stats.straightSpeed += 100;
-    stats.intersectionDelay += 15;
+    stats.straightSpeed += 20;
+    stats.intersectionDelay -= 3;
   }
   
 }
